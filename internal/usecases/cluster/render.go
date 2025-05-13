@@ -138,7 +138,7 @@ func (r *clustersRenderer) renderTable() error {
 	}
 	table := ui.NewTable(r.writer, headers)
 	for _, c := range r.clusters.Clusters {
-		table.Append(
+		_ = table.Append(
 			[]string{
 				c.ProviderName,
 				fmt.Sprintf("%s.%s", c.Name, c.ProviderName),
@@ -147,7 +147,7 @@ func (r *clustersRenderer) renderTable() error {
 			},
 		)
 	}
-	table.Render()
+	_ = table.Render()
 	return nil
 }
 
@@ -195,7 +195,7 @@ func (r *clusterNodesRenderer) renderTable() error {
 	for _, n := range r.nodes.Nodes {
 		allocMem, allocMemUnit := render.BytesToBinarySI(int64(n.AllocatableMemoryBytes))
 		capMem, capMemUnit := render.BytesToBinarySI(int64(n.CapacityMemoryBytes))
-		table.Append(
+		_ = table.Append(
 			[]string{
 				n.Name,
 				fmt.Sprintf("%t", n.IsControlPlane),
@@ -207,7 +207,7 @@ func (r *clusterNodesRenderer) renderTable() error {
 			},
 		)
 	}
-	table.Render()
+	_ = table.Render()
 	return nil
 }
 
