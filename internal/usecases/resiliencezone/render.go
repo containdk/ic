@@ -55,9 +55,9 @@ func (r *resilienceZonesRenderer) renderText() error {
 	}
 	table := ui.NewTable(r.writer, headers)
 	for _, r := range r.resilienceZones {
-		table.Append([]string{r})
+		_ = table.Append([]string{r})
 	}
-	table.Render()
+	_ = table.Render()
 
 	return nil
 }

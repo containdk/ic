@@ -5,35 +5,67 @@ import (
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/renderer"
+	"github.com/olekukonko/tablewriter/tw"
 )
 
 // NewTable creates a new table with default settings
 func NewTable(writer io.Writer, headers []string) *tablewriter.Table {
-	table := tablewriter.NewWriter(writer)
+	table := tablewriter.NewTable(writer,
+		tablewriter.WithRenderer(
+			renderer.NewBlueprint(
+				tw.Rendition{
+					Borders: tw.BorderNone,
+					Settings: tw.Settings{
+						Lines: tw.Lines{
+							ShowHeaderLine: tw.Off,
+						},
+						Separators: tw.Separators{
+							BetweenColumns: tw.Off,
+							BetweenRows:    tw.Off,
+							ShowHeader:     tw.Off,
+						},
+					},
+				},
+			),
+		),
+		tablewriter.WithConfig(
+			tablewriter.Config{
+				Behavior: tablewriter.Behavior{
+					TrimSpace: tw.On,
+				},
+				Header: tw.CellConfig{
+					Formatting: tw.CellFormatting{
+						AutoFormat: false,
+						Alignment:  tw.AlignLeft,
+					},
+				},
+				Row: tw.CellConfig{
+					Formatting: tw.CellFormatting{
+						AutoWrap:  tw.WrapNone,
+						Alignment: tw.AlignLeft,
+					},
+				},
+			},
+		),
+	)
 	if len(headers) > 0 {
-		table.SetHeader(headers)
+		table.Header(headers)
 	} else {
-		table.SetAutoFormatHeaders(false)
+		table.Configure(func(config *tablewriter.Config) {
+			config.Header.Formatting.AutoFormat = false
+		})
 	}
-	table.SetAutoWrapText(false)
-	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetBorder(false)
-	table.SetHeaderLine(false)
-	table.SetCenterSeparator("")
-	table.SetColumnSeparator("")
-	table.SetRowSeparator("")
-	table.SetTablePadding("\t")
-	table.SetNoWhiteSpace(true)
 	return table
 }
 
 // RenderKVTable creates a new key/value table with default settings
 func RenderKVTable(writer io.Writer, title string, rows [][]string) {
 	table := NewTable(writer, []string{})
-	table.SetTablePadding("  ")
-	table.SetNoWhiteSpace(false)
-	table.AppendBulk(rows)
+	table.Configure(func(config *tablewriter.Config) {
+		config.Behavior.TrimSpace = tw.Off
+	})
+	_ = table.Bulk(rows)
 	fmt.Fprintf(writer, "%s:\n", title)
-	table.Render()
+	_ = table.Render()
 }

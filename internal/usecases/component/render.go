@@ -62,23 +62,23 @@ func (r *componentRenderer) renderText() error {
 	rzsHeaders := []string{"name", "version"}
 	rzsTable := ui.NewTable(r.writer, rzsHeaders)
 	for _, c := range r.component.ResilienceZones {
-		rzsTable.Append(
+		_ = rzsTable.Append(
 			[]string{
 				c.Name,
 				c.Version,
 			},
 		)
 	}
-	rzsTable.Render()
+	_ = rzsTable.Render()
 
 	fmt.Fprintln(r.writer)
 	fmt.Fprintln(r.writer, "Clusters:")
 	clustersHeaders := []string{"name"}
 	clustersTable := ui.NewTable(r.writer, clustersHeaders)
 	for _, c := range r.component.Clusters {
-		clustersTable.Append([]string{c})
+		_ = clustersTable.Append([]string{c})
 	}
-	clustersTable.Render()
+	_ = clustersTable.Render()
 
 	return nil
 }
@@ -125,7 +125,7 @@ func (r *componentsRenderer) renderTable() error {
 	}
 	table := ui.NewTable(r.writer, headers)
 	for _, c := range r.components.Components {
-		table.Append(
+		_ = table.Append(
 			[]string{
 				c.Namespace,
 				c.Name,
@@ -133,7 +133,7 @@ func (r *componentsRenderer) renderTable() error {
 			},
 		)
 	}
-	table.Render()
+	_ = table.Render()
 	return nil
 }
 

@@ -55,9 +55,9 @@ func (r *partitionsRenderer) renderText() error {
 	}
 	table := ui.NewTable(r.writer, headers)
 	for _, r := range r.partitions {
-		table.Append([]string{r})
+		_ = table.Append([]string{r})
 	}
-	table.Render()
+	_ = table.Render()
 
 	return nil
 }
