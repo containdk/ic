@@ -29,25 +29,15 @@ func NewTable(writer io.Writer, headers []string) *tablewriter.Table {
 				},
 			),
 		),
-		tablewriter.WithConfig(
-			tablewriter.Config{
-				Behavior: tablewriter.Behavior{
-					TrimSpace: tw.On,
-				},
-				Header: tw.CellConfig{
-					Formatting: tw.CellFormatting{
-						AutoFormat: tw.Off,
-						Alignment:  tw.AlignLeft,
-					},
-				},
-				Row: tw.CellConfig{
-					Formatting: tw.CellFormatting{
-						AutoWrap:  tw.WrapNone,
-						Alignment: tw.AlignLeft,
-					},
-				},
+		tablewriter.WithTrimSpace(tw.On),
+		tablewriter.WithHeaderAutoFormat(tw.Off),
+		tablewriter.WithHeaderAlignment(tw.AlignLeft),
+		tablewriter.WithRowConfig(tw.CellConfig{
+			Formatting: tw.CellFormatting{
+				AutoWrap:  tw.WrapNone,
+				Alignment: tw.AlignLeft,
 			},
-		),
+		}),
 	)
 	if len(headers) > 0 {
 		table.Header(headers)
