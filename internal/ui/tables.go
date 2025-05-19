@@ -36,7 +36,7 @@ func NewTable(writer io.Writer, headers []string) *tablewriter.Table {
 				},
 				Header: tw.CellConfig{
 					Formatting: tw.CellFormatting{
-						AutoFormat: false,
+						AutoFormat: tw.Off,
 						Alignment:  tw.AlignLeft,
 					},
 				},
@@ -53,7 +53,7 @@ func NewTable(writer io.Writer, headers []string) *tablewriter.Table {
 		table.Header(headers)
 	} else {
 		table.Configure(func(config *tablewriter.Config) {
-			config.Header.Formatting.AutoFormat = false
+			config.Header.Formatting.AutoFormat = tw.Off
 		})
 	}
 	return table
