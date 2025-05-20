@@ -10,6 +10,7 @@ import (
 	"github.com/neticdk-k8s/ic/internal/oidc"
 	"github.com/pkg/browser"
 	"github.com/pkg/errors"
+	"golang.org/x/oauth2"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -43,15 +44,12 @@ func (b *Browser) Login(ctx context.Context, in *BrowserLoginInput, oidcClient o
 		return nil, fmt.Errorf("could not generate a nonce: %w", err)
 	}
 
-	pkce, err := oauth2params.NewPKCE()
-	if err != nil {
-		return nil, err
-	}
+	pkceVerifier := oauth2.GenerateVerifier()
 
 	authCodeInput := oidc.GetTokenByAuthCodeInput{
 		BindAddress:         in.BindAddress,
 		RedirectURLHostname: in.RedirectURLHostname,
-		PKCEParams:          pkce,
+		PKCEVerifier:        pkceVerifier,
 		State:               state,
 		Nonce:               nonce,
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/int128/oauth2cli/oauth2params"
 	"github.com/neticdk-k8s/ic/internal/oidc"
 	"github.com/neticdk-k8s/ic/internal/reader"
+	"golang.org/x/oauth2"
 )
 
 const keyboardPrompt = "Enter code: "
@@ -41,16 +42,13 @@ func (k *Keyboard) Login(ctx context.Context, in *KeyboardLoginInput, oidcClient
 		return nil, fmt.Errorf("could not generate a nonce: %w", err)
 	}
 
-	pkce, err := oauth2params.NewPKCE()
-	if err != nil {
-		return nil, err
-	}
+	pkceVerifier := oauth2.GenerateVerifier()
 
 	authCodeURL, err := oidcClient.GetAuthCodeURL(ctx, oidc.GetAuthCodeURLInput{
-		State:       state,
-		Nonce:       nonce,
-		PKCEParams:  pkce,
-		RedirectURI: in.RedirectURI,
+		State:        state,
+		Nonce:        nonce,
+		PKCEVerifier: pkceVerifier,
+		RedirectURI:  in.RedirectURI,
 	})
 	if err != nil {
 		return nil, err
@@ -64,10 +62,10 @@ func (k *Keyboard) Login(ctx context.Context, in *KeyboardLoginInput, oidcClient
 
 	k.Logger.DebugContext(ctx, "Exchanging code and token")
 	tokenSet, err := oidcClient.ExchangeAuthCode(ctx, oidc.ExchangeAuthCodeInput{
-		Code:        code,
-		PKCEParams:  pkce,
-		Nonce:       nonce,
-		RedirectURI: in.RedirectURI,
+		Code:         code,
+		PKCEVerifier: pkceVerifier,
+		Nonce:        nonce,
+		RedirectURI:  in.RedirectURI,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("exchanging authorization code: %w", err)
