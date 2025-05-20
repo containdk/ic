@@ -11,7 +11,6 @@ import (
 	gooidc "github.com/coreos/go-oidc/v3/oidc"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/int128/oauth2cli"
-	"github.com/int128/oauth2cli/oauth2params"
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 )
@@ -105,8 +104,8 @@ type GetTokenByAuthCodeInput struct {
 	// RedirectURLHostname is the hostname of the redirect URL. You can set this
 	// if your provider does not accept localhost.
 	RedirectURLHostname string
-	// PKCE represents a set of PKCE parameters
-	PKCEParams *oauth2params.PKCE
+	// PKCEVerifier is the verifier used to verify the token
+	PKCEVerifier string
 	// OAuth 2.0 state
 	State string
 	// OIDC Nonce
@@ -119,16 +118,17 @@ type GetTokenByAuthCodeInput struct {
 // It does this by creating a local http server used for serving the RedirectURL
 // and opening a browser where the user logs in
 func (c *client) GetTokenByAuthCode(ctx context.Context, in GetTokenByAuthCodeInput, localServerReadyChan chan<- string) (*TokenSet, error) {
-	authCodeOptions := append(
-		in.PKCEParams.AuthCodeOptions(),
+	authCodeOptions := []oauth2.AuthCodeOption{
+		oauth2.S256ChallengeOption(in.PKCEVerifier),
 		oauth2.AccessTypeOffline,
-		gooidc.Nonce(in.Nonce))
+		gooidc.Nonce(in.Nonce),
+	}
 
 	cfg := oauth2cli.Config{
 		OAuth2Config:           c.oauth2config,
 		State:                  in.State,
 		AuthCodeOptions:        authCodeOptions,
-		TokenRequestOptions:    in.PKCEParams.TokenRequestOptions(),
+		TokenRequestOptions:    []oauth2.AuthCodeOption{oauth2.VerifierOption(in.PKCEVerifier)},
 		LocalServerReadyChan:   localServerReadyChan,
 		RedirectURLHostname:    in.RedirectURLHostname,
 		LocalServerBindAddress: []string{in.BindAddress},
@@ -150,8 +150,8 @@ type GetAuthCodeURLInput struct {
 	// RedirectURI is the redirect url
 	// This is typicalle an URN such as urn:ietf:wg:oauth:2.0:oob
 	RedirectURI string
-	// PKCE represents a set of PKCE parameters
-	PKCEParams *oauth2params.PKCE
+	// PKCEVerifier is the verifier used to verify the token
+	PKCEVerifier string
 	// OAuth 2.0 state
 	State string
 	// OIDC Nonce
@@ -163,10 +163,11 @@ func (c *client) GetAuthCodeURL(_ context.Context, in GetAuthCodeURLInput) (stri
 	cfg := c.oauth2config
 	cfg.RedirectURL = in.RedirectURI
 
-	requestOptions := append(
-		in.PKCEParams.AuthCodeOptions(),
+	requestOptions := []oauth2.AuthCodeOption{
+		oauth2.S256ChallengeOption(in.PKCEVerifier),
 		oauth2.AccessTypeOffline,
-		gooidc.Nonce(in.Nonce))
+		gooidc.Nonce(in.Nonce),
+	}
 
 	return cfg.AuthCodeURL(in.State, requestOptions...), nil
 }
@@ -174,8 +175,8 @@ func (c *client) GetAuthCodeURL(_ context.Context, in GetAuthCodeURLInput) (stri
 // ExchangeAuthCodeInput holds the input parameters for ExchangeAuthCode()
 type ExchangeAuthCodeInput struct {
 	Code string
-	// PKCE represents a set of PKCE parameters
-	PKCEParams *oauth2params.PKCE
+	// PKCEVerifier is the verifier used to verify the token
+	PKCEVerifier string
 	// OIDC Nonce
 	Nonce string
 	// RedirectURI is the redirect url
@@ -187,7 +188,7 @@ func (c *client) ExchangeAuthCode(ctx context.Context, in ExchangeAuthCodeInput)
 	cfg := c.oauth2config
 	cfg.RedirectURL = in.RedirectURI
 
-	token, err := cfg.Exchange(ctx, in.Code, in.PKCEParams.TokenRequestOptions()...)
+	token, err := cfg.Exchange(ctx, in.Code, []oauth2.AuthCodeOption{oauth2.VerifierOption(in.PKCEVerifier)}...)
 	if err != nil {
 		return nil, fmt.Errorf("exchanging code: %w", err)
 	}
