@@ -7,7 +7,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-retryablehttp v0.7.7
-	github.com/int128/oauth2cli v1.16.0
+	github.com/int128/oauth2cli v1.17.0
 	github.com/neticdk/go-common v0.19.6
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/olekukonko/tablewriter v1.0.6
