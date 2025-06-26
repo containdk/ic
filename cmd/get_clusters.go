@@ -13,7 +13,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/neticdk/go-common/pkg/qsparser"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 const PerPage = 50
@@ -52,7 +51,6 @@ func getClustersCmd(ac *ic.Context) *cobra.Command {
 		WithGroupID(groupCluster).
 		Build()
 
-	o.bindFlags(c.Flags())
 	return c
 }
 
@@ -71,8 +69,12 @@ type getClustersOptions struct {
 	Filters []string
 }
 
-func (o *getClustersOptions) bindFlags(f *pflag.FlagSet) {
+func (o *getClustersOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringArrayVar(&o.Filters, "filter", []string{}, "Filter output based on conditions")
+	return nil
 }
 
 func (o *getClustersOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }

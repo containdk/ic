@@ -8,7 +8,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/cmd"
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 const getClusterNodeExample = `
@@ -24,9 +23,6 @@ func getClusterNodeCmd(ac *ic.Context) *cobra.Command {
 		Build()
 	c.Aliases = []string{"node"}
 
-	o.bindFlags(c.Flags())
-	c.MarkFlagRequired("cluster-name") //nolint:errcheck
-	c.MarkFlagRequired("node-name")    //nolint:errcheck
 	return c
 }
 
@@ -35,9 +31,17 @@ type getClusterNodeOptions struct {
 	nodeName    string
 }
 
-func (o *getClusterNodeOptions) bindFlags(f *pflag.FlagSet) {
+func (o *getClusterNodeOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringVar(&o.clusterName, "cluster-name", "", "The name of the cluster")
 	f.StringVar(&o.nodeName, "node-name", "", "The name of the node")
+
+	c.MarkFlagRequired("cluster-name") //nolint:errcheck
+	c.MarkFlagRequired("node-name")    //nolint:errcheck
+
+	return nil
 }
 
 func (o *getClusterNodeOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }

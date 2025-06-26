@@ -28,6 +28,7 @@ type deleteClusterOptions struct {
 	clusterID string
 }
 
+func (o *deleteClusterOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
 func (o *deleteClusterOptions) Complete(_ context.Context, ac *ic.Context) error {
 	o.clusterID = ac.EC.CommandArgs[0]
 	return nil

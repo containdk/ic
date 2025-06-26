@@ -244,10 +244,15 @@ func Test_CreateClusterCommandServiceLevels(t *testing.T) {
 		t.Run(tc.testName, func(t *testing.T) {
 			ac, _ := newMockedCreateClusterEC(t)
 			command := newRootCmd(ac)
-			command.SetArgs(tc.args)
+			ac.EC.Command = command // Reassign, since the last subcommand is the command of the execution context
 			o := &createClusterOptions{}
-			o.bindFlags(command.Flags())
-			err := command.ParseFlags(tc.args)
+			err := o.SetupFlags(t.Context(), ac)
+			if err != nil {
+				t.Log(err)
+			}
+			assert.NoError(t, err)
+			command.SetArgs(tc.args)
+			err = command.ParseFlags(tc.args)
 			if err != nil {
 				t.Log(err)
 			}

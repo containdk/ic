@@ -21,8 +21,9 @@ func getResilienceZonesCmd(ac *ic.Context) *cobra.Command {
 
 type getResilienceZonesOptions struct{}
 
-func (o *getResilienceZonesOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
-func (o *getResilienceZonesOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
+func (o *getResilienceZonesOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
+func (o *getResilienceZonesOptions) Complete(_ context.Context, _ *ic.Context) error   { return nil }
+func (o *getResilienceZonesOptions) Validate(_ context.Context, _ *ic.Context) error   { return nil }
 
 func (o *getResilienceZonesOptions) Run(_ context.Context, ac *ic.Context) error {
 	rzs := resiliencezone.ListResilienceZones()

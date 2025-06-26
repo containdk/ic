@@ -28,8 +28,9 @@ func loginCmd(ac *ic.Context) *cobra.Command {
 
 type loginOptions struct{}
 
-func (o *loginOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
-func (o *loginOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
+func (o *loginOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
+func (o *loginOptions) Complete(_ context.Context, _ *ic.Context) error   { return nil }
+func (o *loginOptions) Validate(_ context.Context, _ *ic.Context) error   { return nil }
 func (o *loginOptions) Run(ctx context.Context, ac *ic.Context) error {
 	logger := ac.EC.Logger.WithGroup("Login")
 	ac.Authenticator.SetLogger(logger)

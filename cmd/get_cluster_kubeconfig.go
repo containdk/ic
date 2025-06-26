@@ -9,7 +9,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/cmd"
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 const getClusterKubeConfigExample = `
@@ -25,8 +24,6 @@ func getClusterKubeconfigCmd(ac *ic.Context) *cobra.Command {
 		Build()
 	c.Aliases = []string{"kubeconfig"}
 
-	o.bindFlags(c.Flags())
-	c.MarkFlagsOneRequired("cluster-name", "cluster-id") //nolint:errcheck
 	return c
 }
 
@@ -35,9 +32,15 @@ type getClusterKubeConfigOptions struct {
 	clusterName string
 }
 
-func (o *getClusterKubeConfigOptions) bindFlags(f *pflag.FlagSet) {
+func (o *getClusterKubeConfigOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringVar(&o.clusterID, "cluster-id", "", "The id of the cluster")
 	f.StringVar(&o.clusterName, "cluster-name", "", "The id of the cluster. Use cluster-id instead")
+
+	c.MarkFlagsOneRequired("cluster-name", "cluster-id")
+	return nil
 }
 
 func (o *getClusterKubeConfigOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }

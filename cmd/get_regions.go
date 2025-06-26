@@ -10,7 +10,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/cmd"
 	"github.com/neticdk/go-common/pkg/types"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 func getRegionsCmd(ac *ic.Context) *cobra.Command {
@@ -20,7 +19,6 @@ func getRegionsCmd(ac *ic.Context) *cobra.Command {
 		WithGroupID(groupOther).
 		Build()
 
-	o.bindFlags(c.Flags())
 	return c
 }
 
@@ -28,8 +26,12 @@ type getRegionsOptions struct {
 	Partition string
 }
 
-func (o *getRegionsOptions) bindFlags(f *pflag.FlagSet) {
+func (o *getRegionsOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringVar(&o.Partition, "partition", "", fmt.Sprintf("Partition. One of (%s)", strings.Join(types.AllPartitionsString(), "|")))
+	return nil
 }
 
 func (o *getRegionsOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
