@@ -7,6 +7,7 @@ import (
 
 	"github.com/neticdk-k8s/ic/internal/ic"
 	"github.com/neticdk/go-common/pkg/cli/cmd"
+	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -97,6 +98,7 @@ func Execute(version string) int {
 	ec.PFlags.NoHeadersEnabled = true
 	ac := ic.NewContext()
 	ac.EC = ec
+	ui.SetDefaultOutput(ec.Stderr) // Set all CLI-related output to stderr
 	ec.LongDescription = LongDesc
 	rootCmd := newRootCmd(ac)
 	err := rootCmd.Execute()
