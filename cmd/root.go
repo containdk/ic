@@ -7,6 +7,8 @@ import (
 
 	"github.com/neticdk-k8s/ic/internal/ic"
 	"github.com/neticdk/go-common/pkg/cli/cmd"
+	"github.com/neticdk/go-common/pkg/cli/ui"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -39,9 +41,13 @@ func newRootCmd(ac *ic.Context) *cobra.Command {
 	pf.StringVar(&ac.OIDC.AuthBindAddr, "oidc-auth-bind-addr", "localhost:18000", "[authcode-browser] Bind address and port for local server used for OIDC redirect")
 	pf.StringVar(&ac.OIDC.RedirectURIAuthCodeKeyboard, "oidc-redirect-uri-authcode-keyboard", oobRedirectURI, "[authcode-keyboard] Redirect URI when using authcode keyboard")
 	pf.StringVar(&ac.OIDC.TokenCacheDir, "oidc-token-cache-dir", getDefaultTokenCacheDir(), "Directory used to store cached tokens")
+	pf.BoolVarP(&ac.Quiet, "quiet", "q", false, "Suppress informational UI output")
 
 	c := cmd.NewRootCommand(ac.EC).
 		WithInitFunc(func(_ *cobra.Command, _ []string) error {
+			if ac.Quiet {
+				pterm.DisableOutput()
+			}
 			ac.SetupDefaultAuthenticator()
 			ac.SetupDefaultOIDCProvider()
 			if err := ac.SetupDefaultTokenCache(); err != nil {
@@ -97,6 +103,7 @@ func Execute(version string) int {
 	ec.PFlags.NoHeadersEnabled = true
 	ac := ic.NewContext()
 	ac.EC = ec
+	ui.SetDefaultOutput(ac.EC.Stderr) // Redirect informational UI output (e.g., spinners) to stderr
 	ec.LongDescription = LongDesc
 	rootCmd := newRootCmd(ac)
 	err := rootCmd.Execute()
