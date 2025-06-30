@@ -8,7 +8,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/int128/oauth2cli v1.17.0
-	github.com/neticdk/go-common v0.23.0
+	github.com/neticdk/go-common v0.23.1
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/olekukonko/tablewriter v1.0.7
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
@@ -77,7 +77,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/pterm/pterm v0.12.80 // indirect
+	github.com/pterm/pterm v0.12.81 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.9.0 // indirect
@@ -94,12 +94,12 @@ require (
 	github.com/yuin/goldmark-emoji v1.0.6 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/mod v0.24.0 // indirect
-	golang.org/x/net v0.40.0 // indirect
+	golang.org/x/mod v0.25.0 // indirect
+	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
-	golang.org/x/tools v0.33.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
+	golang.org/x/tools v0.34.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
