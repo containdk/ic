@@ -8,7 +8,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/cmd"
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 func getComponentsCmd(ac *ic.Context) *cobra.Command {
@@ -18,16 +17,14 @@ func getComponentsCmd(ac *ic.Context) *cobra.Command {
 		WithGroupID(groupComponent).
 		Build()
 
-	o.bindFlags(c.Flags())
 	return c
 }
 
 type getComponentsOptions struct{}
 
-func (o *getComponentsOptions) bindFlags(_ *pflag.FlagSet) {}
-
-func (o *getComponentsOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
-func (o *getComponentsOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
+func (o *getComponentsOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
+func (o *getComponentsOptions) Complete(_ context.Context, _ *ic.Context) error   { return nil }
+func (o *getComponentsOptions) Validate(_ context.Context, _ *ic.Context) error   { return nil }
 
 func (o *getComponentsOptions) Run(ctx context.Context, ac *ic.Context) error {
 	logger := ac.EC.Logger.WithGroup("Components")

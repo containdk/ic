@@ -27,6 +27,7 @@ type getClusterOptions struct {
 	clusterID string
 }
 
+func (o *getClusterOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
 func (o *getClusterOptions) Complete(_ context.Context, ac *ic.Context) error {
 	o.clusterID = ac.EC.CommandArgs[0]
 	return nil

@@ -24,8 +24,9 @@ func apiTokenCmd(ac *ic.Context) *cobra.Command {
 
 type apiTokenOptions struct{}
 
-func (o *apiTokenOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
-func (o *apiTokenOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
+func (o *apiTokenOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
+func (o *apiTokenOptions) Complete(_ context.Context, _ *ic.Context) error   { return nil }
+func (o *apiTokenOptions) Validate(_ context.Context, _ *ic.Context) error   { return nil }
 func (o *apiTokenOptions) Run(ctx context.Context, ac *ic.Context) error {
 	logger := ac.EC.Logger.WithGroup("Login")
 	ac.Authenticator.SetLogger(logger)

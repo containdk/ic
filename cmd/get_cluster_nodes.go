@@ -9,7 +9,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/neticdk/go-common/pkg/qsparser"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 const getClusterNodesLongDesc = `Get list of nodes for a nodes.
@@ -37,8 +36,6 @@ func getClusterNodesCmd(ac *ic.Context) *cobra.Command {
 		Build()
 	c.Aliases = []string{"nodes"}
 
-	o.bindFlags(c.Flags())
-	c.MarkFlagRequired("cluster-name") //nolint:errcheck
 	return c
 }
 
@@ -58,9 +55,16 @@ type getClusterNodesOptions struct {
 	Filters []string
 }
 
-func (o *getClusterNodesOptions) bindFlags(f *pflag.FlagSet) {
+func (o *getClusterNodesOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringVar(&o.clusterName, "cluster-name", "", "The name of the cluster")
 	f.StringArrayVar(&o.Filters, "filter", []string{}, "Filter output based on conditions")
+
+	c.MarkFlagRequired("cluster-name") //nolint:errcheck
+
+	return nil
 }
 
 func (o *getClusterNodesOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }

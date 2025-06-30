@@ -21,8 +21,9 @@ func getPartitionsCmd(ac *ic.Context) *cobra.Command {
 
 type getPartitionsOptions struct{}
 
-func (o *getPartitionsOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
-func (o *getPartitionsOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
+func (o *getPartitionsOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
+func (o *getPartitionsOptions) Complete(_ context.Context, _ *ic.Context) error   { return nil }
+func (o *getPartitionsOptions) Validate(_ context.Context, _ *ic.Context) error   { return nil }
 
 func (o *getPartitionsOptions) Run(_ context.Context, ac *ic.Context) error {
 	partitions := partition.ListPartitions()

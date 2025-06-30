@@ -17,12 +17,18 @@ func logoutCmd(ac *ic.Context) *cobra.Command {
 		WithGroupID(groupAuth).
 		Build()
 
-	c.Flags().SortFlags = false
 	return c
 }
 
 type logoutOptions struct{}
 
+func (o *logoutOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
+	f.SortFlags = false
+	return nil
+}
 func (o *logoutOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
 func (o *logoutOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
 

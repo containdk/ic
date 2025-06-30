@@ -13,7 +13,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/neticdk/go-common/pkg/types"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 // New creates a new "update cluster" command
@@ -26,10 +25,6 @@ func updateClusterCmd(ac *ic.Context) *cobra.Command {
 		Build()
 	c.Use = "cluster CLUSTER-ID" //nolint:goconst
 
-	o.bindFlags(c.Flags())
-	c.Flags().SortFlags = false
-	c.MarkFlagsRequiredTogether("has-co", "co-url")
-	c.MarkFlagsOneRequired("description", "environment", "subscription", "infrastructure-provider", "resilience-zone", "has-to", "has-tm", "has-ao", "has-am", "has-co")
 	return c
 }
 
@@ -48,7 +43,10 @@ type updateClusterOptions struct {
 	CustomOperationsURL      string
 }
 
-func (o *updateClusterOptions) bindFlags(f *pflag.FlagSet) {
+func (o *updateClusterOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringVar(&o.Description, "description", "", "Cluster Description")
 	f.StringVar(&o.EnvironmentName, "environment", "", "Environment Name")
 	f.StringVar(&o.SubscriptionID, "subscription", "", "Subscription ID")
@@ -60,6 +58,11 @@ func (o *updateClusterOptions) bindFlags(f *pflag.FlagSet) {
 	f.BoolVar(&o.HasApplicationManagement, "has-am", false, "Application Management")
 	f.BoolVar(&o.HasCustomOperations, "has-co", false, "Custom Operations")
 	f.StringVar(&o.CustomOperationsURL, "co-url", "", "Custom Operations URL")
+
+	f.SortFlags = false
+	c.MarkFlagsRequiredTogether("has-co", "co-url")
+	c.MarkFlagsOneRequired("description", "environment", "subscription", "infrastructure-provider", "resilience-zone", "has-to", "has-tm", "has-ao", "has-am", "has-co")
+	return nil
 }
 
 func (o *updateClusterOptions) Complete(_ context.Context, ac *ic.Context) error {

@@ -13,7 +13,6 @@ import (
 	"github.com/neticdk/go-common/pkg/cli/ui"
 	"github.com/neticdk/go-common/pkg/types"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 func createClusterCmd(ac *ic.Context) *cobra.Command {
@@ -23,14 +22,6 @@ func createClusterCmd(ac *ic.Context) *cobra.Command {
 		WithGroupID(groupCluster).
 		Build()
 
-	o.bindFlags(c.Flags())
-	c.Flags().SortFlags = false
-	c.MarkFlagRequired("name")            //nolint:errcheck
-	c.MarkFlagRequired("provider")        //nolint:errcheck
-	c.MarkFlagRequired("environment")     //nolint:errcheck
-	c.MarkFlagRequired("subscription")    //nolint:errcheck
-	c.MarkFlagRequired("resilience-zone") //nolint:errcheck
-	c.MarkFlagsRequiredTogether("has-co", "co-url")
 	return c
 }
 
@@ -52,7 +43,10 @@ type createClusterOptions struct {
 	CustomOperationsURL      string
 }
 
-func (o *createClusterOptions) bindFlags(f *pflag.FlagSet) {
+func (o *createClusterOptions) SetupFlags(_ context.Context, ac *ic.Context) error {
+	c := ac.EC.Command
+	f := c.Flags()
+
 	f.StringVar(&o.Name, "name", "", "Cluster name")
 	f.StringVar(&o.ProviderName, "provider", "", "Provider Name")
 	f.StringVar(&o.Description, "description", "", "Cluster Description")
@@ -68,6 +62,16 @@ func (o *createClusterOptions) bindFlags(f *pflag.FlagSet) {
 	f.BoolVar(&o.HasApplicationManagement, "has-am", false, "Application Management")
 	f.BoolVar(&o.HasCustomOperations, "has-co", false, "Custom Operations")
 	f.StringVar(&o.CustomOperationsURL, "co-url", "", "Custom Operations URL")
+
+	c.Flags().SortFlags = false
+	c.MarkFlagRequired("name")            //nolint:errcheck
+	c.MarkFlagRequired("provider")        //nolint:errcheck
+	c.MarkFlagRequired("environment")     //nolint:errcheck
+	c.MarkFlagRequired("subscription")    //nolint:errcheck
+	c.MarkFlagRequired("resilience-zone") //nolint:errcheck
+	c.MarkFlagsRequiredTogether("has-co", "co-url")
+
+	return nil
 }
 
 func (o *createClusterOptions) Complete(_ context.Context, _ *ic.Context) error {

@@ -28,6 +28,7 @@ type getComponentOptions struct {
 	component string
 }
 
+func (o *getComponentOptions) SetupFlags(_ context.Context, _ *ic.Context) error { return nil }
 func (o *getComponentOptions) Complete(_ context.Context, ac *ic.Context) error {
 	o.namespace = ac.EC.CommandArgs[0]
 	o.component = ac.EC.CommandArgs[1]

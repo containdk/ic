@@ -1,6 +1,6 @@
 module github.com/neticdk-k8s/ic
 
-go 1.24.3
+go 1.24.4
 
 require (
 	github.com/coreos/go-oidc/v3 v3.14.1
@@ -68,7 +68,7 @@ require (
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
-	github.com/neticdk/go-stdlib v1.0.0 // indirect
+	github.com/neticdk/go-stdlib v0.2.1 // indirect
 	github.com/oapi-codegen/oapi-codegen/v2 v2.4.1 // indirect
 	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 // indirect
 	github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 // indirect
