@@ -43,6 +43,9 @@ type Context struct {
 
 	// TokenCache is the token cache
 	TokenCache tokencache.Cache
+
+	// Quiet is a flag indicating whether to suppress CLI-output
+	Quiet bool
 }
 
 func NewContext() *Context {
