@@ -98,7 +98,7 @@ func Execute(version string) int {
 	ec.PFlags.NoHeadersEnabled = true
 	ac := ic.NewContext()
 	ac.EC = ec
-	ui.SetDefaultOutput(ec.Stderr) // Set all CLI-related output to stderr
+	ui.SetDefaultOutput(ec.Stderr) // Redirect informational UI output (e.g., spinners) to stderr
 	ec.LongDescription = LongDesc
 	rootCmd := newRootCmd(ac)
 	err := rootCmd.Execute()
