@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,6 +8,7 @@ import (
 	"github.com/neticdk-k8s/ic/internal/ic"
 	"github.com/neticdk/go-common/pkg/cli/cmd"
 	"github.com/neticdk/go-common/pkg/cli/ui"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -46,8 +46,7 @@ func newRootCmd(ac *ic.Context) *cobra.Command {
 	c := cmd.NewRootCommand(ac.EC).
 		WithInitFunc(func(_ *cobra.Command, _ []string) error {
 			if ac.Quiet {
-				var buf bytes.Buffer
-				ui.SetDefaultOutput(&buf) // Mute informational UI output
+				pterm.DisableOutput()
 			}
 			ac.SetupDefaultAuthenticator()
 			ac.SetupDefaultOIDCProvider()
