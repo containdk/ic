@@ -4,7 +4,7 @@ go 1.24.4
 
 require (
 	github.com/coreos/go-oidc/v3 v3.14.1
-	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/golang-jwt/jwt/v5 v5.2.3
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/int128/oauth2cli v1.17.0
