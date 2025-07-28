@@ -8,7 +8,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/int128/oauth2cli v1.17.0
-	github.com/neticdk/go-common v0.23.2
+	github.com/neticdk/go-common v0.23.3
 	github.com/oapi-codegen/runtime v1.1.2
 	github.com/olekukonko/tablewriter v1.0.8
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
