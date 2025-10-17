@@ -10,13 +10,15 @@ on:
       - main
 
 permissions:
+  actions: write
   contents: write
   packages: write
+  pull-requests: write
 
 jobs:
   build:
     name: Build and Test
-    uses: neticdk/shared-github-actions/.github/workflows/go-ci.yaml@main
+    uses: neticdk/shared-github-actions/.github/workflows/go-ci.yaml@135fdfb90748155200347f499304cd65c3d3f04b # v0.3.1
     with:
       go-private: "github.com/containdk"
       run-benchmarks: true
@@ -32,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - name: Create release
-        uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5 # v2
+        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           generate_release_notes: true
