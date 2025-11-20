@@ -1,6 +1,6 @@
 module github.com/neticdk-k8s/ic
 
-go 1.25.0
+go 1.25.4
 
 require (
 	github.com/coreos/go-oidc/v3 v3.16.0
@@ -17,8 +17,8 @@ require (
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/oauth2 v0.32.0
-	golang.org/x/sync v0.17.0
+	golang.org/x/oauth2 v0.33.0
+	golang.org/x/sync v0.18.0
 	gopkg.in/yaml.v3 v3.0.1
 	sigs.k8s.io/yaml v1.6.0
 )
