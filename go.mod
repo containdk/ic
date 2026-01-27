@@ -1,6 +1,6 @@
 module github.com/neticdk-k8s/ic
 
-go 1.25.4
+go 1.25.5
 
 require (
 	github.com/coreos/go-oidc/v3 v3.17.0
