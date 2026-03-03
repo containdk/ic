@@ -18,7 +18,7 @@ permissions:
 jobs:
   build:
     name: Build and Test
-    uses: neticdk/shared-github-actions/.github/workflows/go-ci.yaml@135fdfb90748155200347f499304cd65c3d3f04b # v0.3.1
+    uses: neticdk/shared-github-actions/.github/workflows/go-ci.yaml@f1079054f30f35798c8c9c0d38d5b7695704d5e8 # v0.4.1
     with:
       go-private: "github.com/containdk"
       run-benchmarks: true
