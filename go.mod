@@ -3,22 +3,22 @@ module github.com/neticdk-k8s/ic
 go 1.25.5
 
 require (
-	github.com/coreos/go-oidc/v3 v3.17.0
+	github.com/coreos/go-oidc/v3 v3.21.0
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
-	github.com/int128/oauth2cli v1.17.0
-	github.com/neticdk/go-common v0.24.7
-	github.com/oapi-codegen/runtime v1.1.2
+	github.com/int128/oauth2cli v1.18.0
+	github.com/neticdk/go-common v0.28.3
+	github.com/oapi-codegen/runtime v1.7.0
 	github.com/olekukonko/tablewriter v1.1.3
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/pkg/errors v0.9.1
 	github.com/pterm/pterm v0.12.82
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
-	github.com/stretchr/testify v1.11.1
-	golang.org/x/oauth2 v0.33.0
-	golang.org/x/sync v0.18.0
+	github.com/stretchr/testify v1.12.1
+	golang.org/x/oauth2 v0.36.0
+	golang.org/x/sync v0.22.0
 	gopkg.in/yaml.v3 v3.0.1
 	sigs.k8s.io/yaml v1.6.0
 )
