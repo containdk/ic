@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/int128/oauth2cli v1.18.0
 	github.com/neticdk/go-common v0.28.3
-	github.com/neticdk/go-stdlib v0.2.1
+	github.com/neticdk/go-stdlib v1.0.1
 	github.com/oapi-codegen/runtime v1.7.0
 	github.com/olekukonko/tablewriter v1.1.3
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
