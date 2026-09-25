@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
@@ -102,7 +103,7 @@ type GetTokenByAuthCodeInput struct {
 	// BindAddress is the IP-address and port used by the redirect url server
 	BindAddress string
 	// RedirectURLHostname is the hostname of the redirect URL. You can set this
-	// if your provider does not accept localhost.
+	// if your provider does not accept localhost. Custom hostnames require a fixed bind port.
 	RedirectURLHostname string
 	// PKCEVerifier is the verifier used to verify the token
 	PKCEVerifier string
@@ -130,11 +131,24 @@ func (c *client) GetTokenByAuthCode(ctx context.Context, in GetTokenByAuthCodeIn
 		AuthCodeOptions:        authCodeOptions,
 		TokenRequestOptions:    []oauth2.AuthCodeOption{oauth2.VerifierOption(in.PKCEVerifier)},
 		LocalServerReadyChan:   localServerReadyChan,
-		RedirectURLHostname:    in.RedirectURLHostname,
 		LocalServerBindAddress: []string{in.BindAddress},
 		Logf: func(format string, args ...any) {
 			c.logger.DebugContext(ctx, fmt.Sprintf(format, args...))
 		},
+	}
+	if in.RedirectURLHostname != "" && in.RedirectURLHostname != "localhost" {
+		_, port, err := net.SplitHostPort(in.BindAddress)
+		if err != nil {
+			return nil, fmt.Errorf("parsing OIDC bind address: %w", err)
+		}
+		if port == "" || port == "0" {
+			return nil, fmt.Errorf("custom OIDC redirect hostname requires a fixed bind port")
+		}
+		redirectURL := url.URL{
+			Scheme: "http",
+			Host:   net.JoinHostPort(in.RedirectURLHostname, port),
+		}
+		cfg.OAuth2Config.RedirectURL = redirectURL.String()
 	}
 
 	token, err := oauth2cli.GetToken(ctx, cfg)
