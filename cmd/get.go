@@ -27,6 +27,7 @@ func getCmd(ac *ic.Context) *cobra.Command {
 		getClusterNodesCmd(ac),
 		getClusterNodeCmd(ac),
 		getClusterKubeconfigCmd(ac),
+		getClusterVulnerabilitiesCmd(ac),
 		getPartitionsCmd(ac),
 		getRegionsCmd(ac),
 		getResilienceZonesCmd(ac),
