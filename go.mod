@@ -1,6 +1,6 @@
 module github.com/neticdk-k8s/ic
 
-go 1.25.5
+go 1.27.1
 
 require (
 	github.com/coreos/go-oidc/v3 v3.17.0
@@ -9,6 +9,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/int128/oauth2cli v1.17.0
 	github.com/neticdk/go-common v0.24.7
+	github.com/neticdk/go-stdlib v0.2.1
 	github.com/oapi-codegen/runtime v1.1.2
 	github.com/olekukonko/tablewriter v1.1.3
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
@@ -19,7 +20,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/oauth2 v0.33.0
 	golang.org/x/sync v0.21.0
-	gopkg.in/yaml.v3 v3.0.1
+	gopkg.in/yaml.v2 v2.4.0
 	sigs.k8s.io/yaml v1.6.0
 )
 
@@ -72,7 +73,6 @@ require (
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
-	github.com/neticdk/go-stdlib v0.2.1 // indirect
 	github.com/oapi-codegen/oapi-codegen/v2 v2.5.1 // indirect
 	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 // indirect
 	github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 // indirect
@@ -106,7 +106,7 @@ require (
 	golang.org/x/term v0.44.0 // indirect
 	golang.org/x/text v0.39.0 // indirect
 	golang.org/x/tools v0.47.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen

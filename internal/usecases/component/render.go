@@ -8,6 +8,8 @@ import (
 	"github.com/neticdk-k8s/ic/internal/ui"
 )
 
+const headerName = "name"
+
 type Renderer interface {
 	// Render renders the component
 	Render(format string) error
@@ -59,7 +61,7 @@ func (r *componentRenderer) renderText() error {
 
 	fmt.Fprintln(r.writer)
 	fmt.Fprintln(r.writer, "Resilience Zones:")
-	rzsHeaders := []string{"name", "version"}
+	rzsHeaders := []string{headerName, "version"}
 	rzsTable := ui.NewTable(r.writer, rzsHeaders)
 	for _, c := range r.component.ResilienceZones {
 		_ = rzsTable.Append(
@@ -73,7 +75,7 @@ func (r *componentRenderer) renderText() error {
 
 	fmt.Fprintln(r.writer)
 	fmt.Fprintln(r.writer, "Clusters:")
-	clustersHeaders := []string{"name"}
+	clustersHeaders := []string{headerName}
 	clustersTable := ui.NewTable(r.writer, clustersHeaders)
 	for _, c := range r.component.Clusters {
 		_ = clustersTable.Append([]string{c})
@@ -121,7 +123,7 @@ func (r *componentsRenderer) Render(format string) error {
 func (r *componentsRenderer) renderTable() error {
 	var headers []string
 	if !r.noHeaders {
-		headers = []string{"namespace", "name", "type"}
+		headers = []string{"namespace", headerName, "type"}
 	}
 	table := ui.NewTable(r.writer, headers)
 	for _, c := range r.components.Components {

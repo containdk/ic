@@ -23,6 +23,8 @@ jobs:
       go-private: "github.com/containdk"
       run-benchmarks: true
       run-release-test: false
+      run-govulncheck: true
+      govulncheck-fail: true
     secrets:
       gh_username: "ic-robot"
       gh_token: ${{ secrets.CONTAIN_BOT_PAT }}

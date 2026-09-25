@@ -38,7 +38,7 @@ func getCmd(ac *ic.Context) *cobra.Command {
 	c.AddGroup(
 		&cobra.Group{
 			ID:    groupCluster,
-			Title: "Cluster Commands:",
+			Title: groupClusterTitle,
 		},
 		&cobra.Group{
 			ID:    groupComponent,

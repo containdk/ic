@@ -23,6 +23,8 @@ const (
 	groupCluster   = "group-cluster"
 	groupComponent = "group-component"
 	groupOther     = "group-other"
+
+	groupClusterTitle = "Cluster Commands:"
 )
 
 const (

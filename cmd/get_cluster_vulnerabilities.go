@@ -14,6 +14,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	outputDirPermissions  = 0o750
+	outputFilePermissions = 0o640
+)
+
 const getClusterVulnerabilitiesLongDesc = `Get vulnerabilities detected in images running in one or more clusters.
 
 Output formats: plain, table, json, csv
@@ -72,7 +77,7 @@ func (o *getClusterVulnerabilitiesOptions) Validate(_ context.Context, ac *ic.Co
 		return fmt.Errorf("unsupported output format: %s", ac.EC.PFlags.OutputFormat)
 	}
 	if o.outputDir != "" {
-		if err := os.MkdirAll(o.outputDir, 0o755); err != nil { //nolint:gosec // output directory is user facing
+		if err := os.MkdirAll(o.outputDir, outputDirPermissions); err != nil {
 			return fmt.Errorf("creating output directory: %w", err)
 		}
 	}
@@ -156,8 +161,13 @@ func (o *getClusterVulnerabilitiesOptions) writeFile(v *cluster.ClusterVulnerabi
 	if format == cluster.FormatPlain || format == cluster.FormatTable {
 		ext = "txt"
 	}
-	path := filepath.Join(o.outputDir, fmt.Sprintf("cve_%s.%s", v.ClusterID, ext))
-	f, err := os.Create(path) //nolint:gosec // path is built from user input by design
+	root, err := os.OpenRoot(o.outputDir)
+	if err != nil {
+		return fmt.Errorf("opening output directory: %w", err)
+	}
+	defer root.Close()
+	filename := fmt.Sprintf("cve_%s.%s", v.ClusterID, ext)
+	f, err := root.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, outputFilePermissions)
 	if err != nil {
 		return err
 	}
@@ -168,7 +178,7 @@ func (o *getClusterVulnerabilitiesOptions) writeFile(v *cluster.ClusterVulnerabi
 		err = cerr
 	}
 	if err == nil {
-		ui.Info.Printfln("Wrote %s", path)
+		ui.Info.Printfln("Wrote %s", filepath.Join(o.outputDir, filename))
 	}
 	return err
 }
