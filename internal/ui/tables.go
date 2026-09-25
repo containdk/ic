@@ -34,8 +34,10 @@ func NewTable(writer io.Writer, headers []string) *tablewriter.Table {
 		tablewriter.WithHeaderAlignment(tw.AlignLeft),
 		tablewriter.WithRowConfig(tw.CellConfig{
 			Formatting: tw.CellFormatting{
-				AutoWrap:  tw.WrapNone,
-				Alignment: tw.AlignLeft,
+				AutoWrap: tw.WrapNone,
+			},
+			Alignment: tw.CellAlignment{
+				Global: tw.AlignLeft,
 			},
 		}),
 	)
