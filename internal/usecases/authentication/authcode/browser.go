@@ -62,9 +62,9 @@ func (b *Browser) Login(ctx context.Context, in *BrowserLoginInput, oidcClient o
 	eg.Go(func() error {
 		select {
 		case url := <-ready:
-			b.Logger.Debug("Open url", "url", url)
+			b.Logger.DebugContext(ctx, "Open url", "url", url)
 			if err := browser.OpenURL(url); err != nil {
-				b.Logger.Error("could not open the browser", "err", err)
+				b.Logger.ErrorContext(ctx, "could not open the browser", "err", err)
 			}
 			return nil
 		case <-ctx.Done():
@@ -78,7 +78,7 @@ func (b *Browser) Login(ctx context.Context, in *BrowserLoginInput, oidcClient o
 			return errors.Wrap(err, "getting token")
 		}
 		out = tokenSet
-		b.Logger.Debug("Got a valid token set")
+		b.Logger.DebugContext(ctx, "Got a valid token set")
 		return nil
 	})
 	if err := eg.Wait(); err != nil {

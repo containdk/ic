@@ -27,6 +27,7 @@ func getCmd(ac *ic.Context) *cobra.Command {
 		getClusterNodesCmd(ac),
 		getClusterNodeCmd(ac),
 		getClusterKubeconfigCmd(ac),
+		getClusterVulnerabilitiesCmd(ac),
 		getPartitionsCmd(ac),
 		getRegionsCmd(ac),
 		getResilienceZonesCmd(ac),
@@ -37,7 +38,7 @@ func getCmd(ac *ic.Context) *cobra.Command {
 	c.AddGroup(
 		&cobra.Group{
 			ID:    groupCluster,
-			Title: "Cluster Commands:",
+			Title: groupClusterTitle,
 		},
 		&cobra.Group{
 			ID:    groupComponent,

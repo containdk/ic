@@ -993,6 +993,80 @@ func (_c *MockClientWithResponsesInterface_ListResourcesByTypeWithResponse_Call)
 	return _c
 }
 
+// ListVulnerabilitiesWithResponse provides a mock function with given fields: ctx, clusterId, reqEditors
+func (_m *MockClientWithResponsesInterface) ListVulnerabilitiesWithResponse(ctx context.Context, clusterId string, reqEditors ...RequestEditorFn) (*ListVulnerabilitiesResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, clusterId)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListVulnerabilitiesWithResponse")
+	}
+
+	var r0 *ListVulnerabilitiesResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, ...RequestEditorFn) (*ListVulnerabilitiesResponse, error)); ok {
+		return rf(ctx, clusterId, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string, ...RequestEditorFn) *ListVulnerabilitiesResponse); ok {
+		r0 = rf(ctx, clusterId, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*ListVulnerabilitiesResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string, ...RequestEditorFn) error); ok {
+		r1 = rf(ctx, clusterId, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListVulnerabilitiesWithResponse'
+type MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call struct {
+	*mock.Call
+}
+
+// ListVulnerabilitiesWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - clusterId string
+//   - reqEditors ...RequestEditorFn
+func (_e *MockClientWithResponsesInterface_Expecter) ListVulnerabilitiesWithResponse(ctx interface{}, clusterId interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call {
+	return &MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call{Call: _e.mock.On("ListVulnerabilitiesWithResponse",
+		append([]interface{}{ctx, clusterId}, reqEditors...)...)}
+}
+
+func (_c *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call) Run(run func(ctx context.Context, clusterId string, reqEditors ...RequestEditorFn)) *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(string), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call) Return(_a0 *ListVulnerabilitiesResponse, _a1 error) *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call) RunAndReturn(run func(context.Context, string, ...RequestEditorFn) (*ListVulnerabilitiesResponse, error)) *MockClientWithResponsesInterface_ListVulnerabilitiesWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateClusterKubeConfigWithBodyWithResponse provides a mock function with given fields: ctx, clusterId, contentType, body, reqEditors
 func (_m *MockClientWithResponsesInterface) UpdateClusterKubeConfigWithBodyWithResponse(ctx context.Context, clusterId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateClusterKubeConfigResponse, error) {
 	_va := make([]interface{}, len(reqEditors))

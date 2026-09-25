@@ -44,6 +44,7 @@ func (o *getClusterKubeConfigOptions) SetupFlags(_ context.Context, ac *ic.Conte
 }
 
 func (o *getClusterKubeConfigOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }
+
 func (o *getClusterKubeConfigOptions) Validate(_ context.Context, _ *ic.Context) error { return nil }
 
 func (o *getClusterKubeConfigOptions) Run(ctx context.Context, ac *ic.Context) error {

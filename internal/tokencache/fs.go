@@ -43,7 +43,7 @@ func (c *fsCache) Lookup(key Key) (*oidc.TokenSet, error) {
 		return nil, fmt.Errorf("could not compute the key: %w", err)
 	}
 	p := filepath.Join(c.CacheDir, filename)
-	f, err := os.Open(p)
+	f, err := os.OpenInRoot(c.CacheDir, filename)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, &CacheMissError{}
@@ -73,16 +73,25 @@ func (c *fsCache) Save(key Key, tokenSet oidc.TokenSet) error {
 		return fmt.Errorf("could not compute the key: %w", err)
 	}
 	p := filepath.Join(c.CacheDir, filename)
-	f, err := os.OpenFile(p, os.O_RDWR|os.O_CREATE|os.O_TRUNC, newFilePermissions)
+	root, err := os.OpenRoot(c.CacheDir)
+	if err != nil {
+		return fmt.Errorf("could not open cache directory %s: %w", c.CacheDir, err)
+	}
+	defer root.Close()
+	f, err := root.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, newFilePermissions)
 	if err != nil {
 		return fmt.Errorf("could not create file %s: %w", p, err)
 	}
 	defer f.Close()
+	if err := f.Chmod(newFilePermissions); err != nil {
+		return fmt.Errorf("could not set permissions on cache file %s: %w", p, err)
+	}
 	e := cachedToken{
 		AccessToken:  tokenSet.AccessToken,
 		IDToken:      tokenSet.IDToken,
 		RefreshToken: tokenSet.RefreshToken,
 	}
+	// #nosec G117 -- Token serialization is intentional in this owner-only credential cache.
 	if err := json.NewEncoder(f).Encode(&e); err != nil {
 		return fmt.Errorf("json encode error: %w", err)
 	}

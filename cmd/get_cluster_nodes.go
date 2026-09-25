@@ -62,9 +62,7 @@ func (o *getClusterNodesOptions) SetupFlags(_ context.Context, ac *ic.Context) e
 	f.StringVar(&o.clusterName, "cluster-name", "", "The name of the cluster")
 	f.StringArrayVar(&o.Filters, "filter", []string{}, "Filter output based on conditions")
 
-	c.MarkFlagRequired("cluster-name") //nolint:errcheck
-
-	return nil
+	return c.MarkFlagRequired("cluster-name")
 }
 
 func (o *getClusterNodesOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }

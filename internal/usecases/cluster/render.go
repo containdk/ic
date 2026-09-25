@@ -1,8 +1,11 @@
 package cluster
 
 import (
+	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/neticdk-k8s/ic/internal/render"
 	"github.com/neticdk-k8s/ic/internal/ui"
@@ -13,6 +16,7 @@ const (
 	FormatJson  = "json"
 	FormatTable = "table"
 	FormatPlain = "plain"
+	FormatCSV   = "csv"
 )
 
 type Renderer interface {
@@ -306,4 +310,98 @@ func (r *clusterKubeConfigRenderer) renderJSON() error {
 		return err
 	}
 	return render.PrettyPrintJSON(jsonData, r.writer)
+}
+
+type clusterVulnerabilitiesRenderer struct {
+	writer    io.Writer
+	noHeaders bool
+	clusters  []*ClusterVulnerabilities
+}
+
+// NewClusterVulnerabilitiesRenderer creates a new renderer for vulnerabilities across one or more clusters
+func NewClusterVulnerabilitiesRenderer(clusters []*ClusterVulnerabilities, writer io.Writer, noHeaders bool) *clusterVulnerabilitiesRenderer {
+	return &clusterVulnerabilitiesRenderer{
+		writer:    writer,
+		noHeaders: noHeaders,
+		clusters:  clusters,
+	}
+}
+
+// Render renders the cluster vulnerabilities
+func (r *clusterVulnerabilitiesRenderer) Render(format string) error {
+	switch format {
+	case FormatJson:
+		return r.renderJSON()
+	case FormatCSV:
+		return r.renderCSV()
+	case FormatPlain, FormatTable:
+		return r.renderTable()
+	default:
+		return fmt.Errorf("unknown format: %s", format)
+	}
+}
+
+func (r *clusterVulnerabilitiesRenderer) renderJSON() error {
+	jsonData, err := json.Marshal(r.clusters)
+	if err != nil {
+		return err
+	}
+	return render.PrettyPrintJSON(jsonData, r.writer)
+}
+
+// renderCSV writes one row per vulnerable image, matching the columns of the web UI download
+// with the cluster and fix versions added.
+func (r *clusterVulnerabilitiesRenderer) renderCSV() error {
+	w := csv.NewWriter(r.writer)
+	if !r.noHeaders {
+		if err := w.Write([]string{"Cluster", "CVE", "Severity", "Package Name", "Package Version", "Fix Versions", "Image", "Categories"}); err != nil {
+			return err
+		}
+	}
+	for _, c := range r.clusters {
+		for _, v := range c.Vulnerabilities {
+			for _, image := range v.Images {
+				if err := w.Write([]string{
+					c.ClusterID,
+					v.ID,
+					v.Severity,
+					v.PackageName,
+					v.PackageVersion,
+					strings.Join(v.FixVersions, ","),
+					image,
+					strings.Join(v.Categories, ","),
+				}); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	w.Flush()
+	return w.Error()
+}
+
+func (r *clusterVulnerabilitiesRenderer) renderTable() error {
+	var headers []string
+	if !r.noHeaders {
+		headers = []string{"cluster", "id", "severity", "package", "version", "fixed in", "images", "categories"}
+	}
+	table := ui.NewTable(r.writer, headers)
+	for _, c := range r.clusters {
+		for _, v := range c.Vulnerabilities {
+			_ = table.Append(
+				[]string{
+					c.ClusterID,
+					v.ID,
+					v.Severity,
+					v.PackageName,
+					v.PackageVersion,
+					strings.Join(v.FixVersions, ","),
+					fmt.Sprintf("%d", len(v.Images)),
+					strings.Join(v.Categories, ","),
+				},
+			)
+		}
+	}
+	_ = table.Render()
+	return nil
 }

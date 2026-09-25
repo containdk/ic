@@ -18,11 +18,14 @@ permissions:
 jobs:
   build:
     name: Build and Test
-    uses: neticdk/shared-github-actions/.github/workflows/go-ci.yaml@a896dd9c1eb45e54c30eb3f256e6f269869e98e1 # v0.4.2
+    uses: neticdk/shared-github-actions/.github/workflows/go-ci.yaml@v0.8.1
     with:
       go-private: "github.com/containdk"
       run-benchmarks: true
       run-release-test: false
+      run-govulncheck: true
+      govulncheck-fail: true
+      govulncheck-fail-without-fix: true
     secrets:
       gh_username: "ic-robot"
       gh_token: ${{ secrets.CONTAIN_BOT_PAT }}

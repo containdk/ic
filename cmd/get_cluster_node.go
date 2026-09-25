@@ -38,10 +38,10 @@ func (o *getClusterNodeOptions) SetupFlags(_ context.Context, ac *ic.Context) er
 	f.StringVar(&o.clusterName, "cluster-name", "", "The name of the cluster")
 	f.StringVar(&o.nodeName, "node-name", "", "The name of the node")
 
-	c.MarkFlagRequired("cluster-name") //nolint:errcheck
-	c.MarkFlagRequired("node-name")    //nolint:errcheck
-
-	return nil
+	if err := c.MarkFlagRequired("cluster-name"); err != nil {
+		return err
+	}
+	return c.MarkFlagRequired("node-name")
 }
 
 func (o *getClusterNodeOptions) Complete(_ context.Context, _ *ic.Context) error { return nil }

@@ -15,6 +15,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const regionFlag = "region"
+
 func createClusterCmd(ac *ic.Context) *cobra.Command {
 	o := &createClusterOptions{}
 	c := cmd.NewSubCommand("cluster", o, ac).
@@ -52,7 +54,7 @@ func (o *createClusterOptions) SetupFlags(_ context.Context, ac *ic.Context) err
 	f.StringVar(&o.Description, "description", "", "Cluster Description")
 	f.StringVar(&o.EnvironmentName, "environment", "", "Environment Name")
 	f.StringVar(&o.Partition, "partition", "netic", fmt.Sprintf("Partition. One of (%s)", strings.Join(types.AllPartitionsString(), "|")))
-	f.StringVar(&o.Region, "region", "dk-north", "Region. Depends on the partition.")
+	f.StringVar(&o.Region, regionFlag, "dk-north", "Region. Depends on the partition.")
 	f.StringVar(&o.SubscriptionID, "subscription", "", "Subscription ID")
 	f.StringVar(&o.InfrastructureProvider, "infrastructure-provider", "netic", fmt.Sprintf("Infrastructure Provider. One of (%s)", strings.Join(types.AllInfrastructureProvidersString(), "|")))
 	f.StringVar(&o.ResilienceZone, "resilience-zone", "netic", fmt.Sprintf("Resilience Zone. Should be one of (%s)", strings.Join(types.AllResilienceZonesString(), "|")))
@@ -64,11 +66,21 @@ func (o *createClusterOptions) SetupFlags(_ context.Context, ac *ic.Context) err
 	f.StringVar(&o.CustomOperationsURL, "co-url", "", "Custom Operations URL")
 
 	c.Flags().SortFlags = false
-	c.MarkFlagRequired("name")            //nolint:errcheck
-	c.MarkFlagRequired("provider")        //nolint:errcheck
-	c.MarkFlagRequired("environment")     //nolint:errcheck
-	c.MarkFlagRequired("subscription")    //nolint:errcheck
-	c.MarkFlagRequired("resilience-zone") //nolint:errcheck
+	if err := c.MarkFlagRequired("name"); err != nil {
+		return err
+	}
+	if err := c.MarkFlagRequired("provider"); err != nil {
+		return err
+	}
+	if err := c.MarkFlagRequired("environment"); err != nil {
+		return err
+	}
+	if err := c.MarkFlagRequired("subscription"); err != nil {
+		return err
+	}
+	if err := c.MarkFlagRequired("resilience-zone"); err != nil {
+		return err
+	}
 	c.MarkFlagsRequiredTogether("has-co", "co-url")
 
 	return nil
@@ -106,14 +118,14 @@ func (o *createClusterOptions) Validate(ctx context.Context, ac *ic.Context) err
 	r, ok := types.ParseRegion(o.Region)
 	if !ok {
 		return &cmd.InvalidArgumentError{
-			Flag:     "region",
+			Flag:     regionFlag,
 			Val:      o.Region,
 			SeeOther: "get regions",
 		}
 	}
 	if !types.HasRegion(p, r) {
 		return &cmd.InvalidArgumentError{
-			Flag:     "region",
+			Flag:     regionFlag,
 			Val:      o.Region,
 			SeeOther: fmt.Sprintf("get regions --partition %s", o.Partition),
 		}

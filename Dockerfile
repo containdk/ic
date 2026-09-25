@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} golang:alpine@sha256:d9b2e14101f27ec8d09674cd01186798d227bb0daec90e032aeb1cd22ac0f029 AS base
+FROM --platform=${BUILDPLATFORM} golang:1.27.1-alpine@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414 AS base
 
 RUN apk update
 RUN apk add -U --no-cache ca-certificates && update-ca-certificates
