@@ -4,17 +4,17 @@ go 1.27.1
 
 require (
 	github.com/coreos/go-oidc/v3 v3.17.0
-	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/int128/oauth2cli v1.17.0
 	github.com/neticdk/go-common v0.24.7
-	github.com/neticdk/go-stdlib v0.2.1
+	github.com/neticdk/go-stdlib v0.2.2
 	github.com/oapi-codegen/runtime v1.4.2
-	github.com/olekukonko/tablewriter v1.1.3
+	github.com/olekukonko/tablewriter v1.1.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/pkg/errors v0.9.1
-	github.com/pterm/pterm v0.12.82
+	github.com/pterm/pterm v0.12.83
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.11.1
