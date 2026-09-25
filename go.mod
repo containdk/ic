@@ -11,7 +11,7 @@ require (
 	github.com/neticdk/go-common v0.28.3
 	github.com/neticdk/go-stdlib v1.0.1
 	github.com/oapi-codegen/runtime v1.7.0
-	github.com/olekukonko/tablewriter v1.1.4
+	github.com/olekukonko/tablewriter v1.1.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/pkg/errors v0.9.1
 	github.com/pterm/pterm v0.12.83
