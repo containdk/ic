@@ -2526,7 +2526,7 @@
         },
         "/clusters/{clusterId}/resources/{group}/{version}/namespaces/{namespace}/{resource}/{name}": {
             "get": {
-                "description": "getResource returns a specific resource collected from the cluster.\n\nThe resource path is based on the principles of the Kubernetes API except ther is no distinction\nbetween core and non core APIs. The group of the core APIs is \"core\". See also https://kubernetes.io/docs/reference/using-api/api-concepts/\n",
+                "description": "getResource returns a specific resource collected from the cluster.\n\nThe resource path is based on the principles of the Kubernetes API except there is no distinction\nbetween core and non core APIs. The group of the core APIs is \"core\". See also https://kubernetes.io/docs/reference/using-api/api-concepts/\n",
                 "operationId": "getResource",
                 "parameters": [
                     {
@@ -3042,6 +3042,144 @@
                 }
             }
         },
+        "/clusters/{clusterId}/vulnerabilities": {
+            "get": {
+                "description": "listVulnerabilities returns the vulnerabilities detected in images running in a specific cluster instance.\n\nVulnerabilities are ordered by descending severity. Workloads are limited to those running in the\ngiven cluster.\n",
+                "operationId": "listVulnerabilities",
+                "parameters": [
+                    {
+                        "description": "the cluster id",
+                        "name": "clusterId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid cluster id",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid credentials (OAuth 2.0 token)",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The request instance was not found (or user does not have access)",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal errors communication with backends or other",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "collection of vulnerabilities for cluster",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vulnerabilities"
+                                },
+                                "examples": {
+                                    "response": {
+                                        "value": {
+                                            "@id": "https://api.k8s.netic.dk/clusters/prod58.provider11/vulnerabilities",
+                                            "@type": "VulnerabilityCollection",
+                                            "count": 1,
+                                            "vulnerabilities": [
+                                                {
+                                                    "categories": [
+                                                        "platform"
+                                                    ],
+                                                    "description": "Misuse of ServerConfig.PublicKeyCallback may cause authorization bypass in golang.org/x/crypto",
+                                                    "id": "CVE-2024-45337",
+                                                    "images": [
+                                                        {
+                                                            "digest": "sha256:d56f135b6462cfc476447cfe564b83a45e8bb7da2774963b00d12161112270b7",
+                                                            "ref": "registry.k8s.io/ingress-nginx/controller:v1.11.3"
+                                                        }
+                                                    ],
+                                                    "links": [
+                                                        "https://nvd.nist.gov/vuln/detail/CVE-2024-45337"
+                                                    ],
+                                                    "package": {
+                                                        "fixVersions": [
+                                                            "0.31.0"
+                                                        ],
+                                                        "name": "golang.org/x/crypto",
+                                                        "version": "v0.28.0"
+                                                    },
+                                                    "severity": "CRITICAL",
+                                                    "workloads": [
+                                                        {
+                                                            "apiVersion": "apps/v1",
+                                                            "category": "platform",
+                                                            "kind": "Deployment",
+                                                            "name": "ingress-nginx-controller",
+                                                            "namespace": "ingress-nginx"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vulnerabilities"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/components": {
             "get": {
                 "description": "listComponents returns a list of components depending on the authorizations of the user.\n\nThe returned list will contain all components that the user has access to\nsee. Filtering is done based on the resources listed in the given OAuth 2.0\ntoken. The result is a partial collection supporting pagination.\n",
@@ -3298,7 +3436,7 @@
                         "$ref": "#/components/schemas/version"
                     },
                     "clusterType": {
-                        "$ref": "#/components/schemas/ClusterType"
+                        "$ref": "#/components/schemas/Type"
                     },
                     "components": {
                         "description": "Components is a reference to the collection of components detected to be running in the cluster",
@@ -3407,10 +3545,6 @@
                     }
                 }
             },
-            "ClusterType": {
-                "description": "ClusterType specifies the type of cluster sharing",
-                "type": "string"
-            },
             "Clusters": {
                 "description": "Clusters represents a collection of clusters",
                 "type": "object",
@@ -3518,7 +3652,7 @@
                 }
             },
             "ComponentCluster": {
-                "description": "Cluster models a cluster for inclusion",
+                "description": "ComponentCluster models a cluster for inclusion",
                 "type": "object",
                 "properties": {
                     "@context": {
@@ -3547,7 +3681,7 @@
                 }
             },
             "ComponentResilienceZone": {
-                "description": "ResilienceZone models resilience zone for inclusion",
+                "description": "ComponentResilienceZone models resilience zone for inclusion",
                 "type": "object",
                 "properties": {
                     "@context": {
@@ -4347,7 +4481,7 @@
                 "type": "object",
                 "properties": {
                     "detail": {
-                        "description": "Detail is humanreadable explanation of the specific occurence of the problem RFC-9457#3.1.4",
+                        "description": "Detail is humanreadable explanation of the specific occurrence of the problem RFC-9457#3.1.4",
                         "type": "string"
                     },
                     "instance": {
@@ -4546,6 +4680,10 @@
                     }
                 }
             },
+            "Type": {
+                "description": "ClusterType specifies the type of cluster sharing",
+                "type": "string"
+            },
             "UpdateCluster": {
                 "description": "UpdateCluster represents the information used to update a secure cloud stack Kubernetes cluster's metadata",
                 "type": "object",
@@ -4601,6 +4739,154 @@
                     },
                     "subscriptionID": {
                         "description": "SubscriptionID is the subscription ID associated with the cluster",
+                        "type": "string"
+                    }
+                }
+            },
+            "Vulnerabilities": {
+                "description": "Vulnerabilities represents the vulnerabilities detected in images running in a cluster",
+                "type": "object",
+                "properties": {
+                    "@context": {
+                        "description": "Context is defining the JSON-LD context for dereferencing the data as stated in the JSON-LD specification https://www.w3.org/TR/json-ld/#keywords",
+                        "type": "object"
+                    },
+                    "@id": {
+                        "description": "ID is identifying the node with an IRI as stated in the JSON-LD specification https://www.w3.org/TR/json-ld/#keywords",
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "@included": {
+                        "description": "Included will container linked resources included here for convenience",
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "@type": {
+                        "description": "Type is optional explicit definition of the type of node as stated in the JSON-LD specification https://www.w3.org/TR/json-ld/#keywords",
+                        "type": "string"
+                    },
+                    "count": {
+                        "description": "Count is the number of vulnerabilities in the collection",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "vulnerabilities": {
+                        "description": "Vulnerabilities is the list of vulnerabilities ordered by descending severity",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Vulnerability"
+                        }
+                    }
+                }
+            },
+            "Vulnerability": {
+                "description": "Vulnerability represents a single vulnerability found in one or more images running in a cluster",
+                "type": "object",
+                "properties": {
+                    "categories": {
+                        "description": "Categories is the sorted list of distinct workload categories affected, i.e., customer, platform or system",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "description": {
+                        "description": "Description is the description of the vulnerability",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "ID is the vulnerability identifier, e.g., a CVE or GHSA identifier",
+                        "type": "string",
+                        "example": "CVE-2024-45337"
+                    },
+                    "images": {
+                        "description": "Images is the list of images in the cluster containing the vulnerability",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VulnerabilityImage"
+                        }
+                    },
+                    "links": {
+                        "description": "Links is a list of references to further information on the vulnerability",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "package": {
+                        "$ref": "#/components/schemas/VulnerabilityPackage"
+                    },
+                    "severity": {
+                        "description": "Severity is the severity level of the vulnerability. One of: CRITICAL, HIGH, MEDIUM, LOW, NEGLIGIBLE, UNKNOWN",
+                        "type": "string",
+                        "example": "HIGH"
+                    },
+                    "workloads": {
+                        "description": "Workloads is the list of workloads in the cluster running images containing the vulnerability",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VulnerabilityWorkload"
+                        }
+                    }
+                }
+            },
+            "VulnerabilityImage": {
+                "type": "object",
+                "properties": {
+                    "digest": {
+                        "description": "Digest is the image digest",
+                        "type": "string"
+                    },
+                    "ref": {
+                        "description": "Ref is the image reference",
+                        "type": "string"
+                    }
+                }
+            },
+            "VulnerabilityPackage": {
+                "description": "Package is the vulnerable package",
+                "type": "object",
+                "properties": {
+                    "fixVersions": {
+                        "description": "FixVersions is the list of versions fixing the vulnerability",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "name": {
+                        "description": "Name is the name of the package",
+                        "type": "string"
+                    },
+                    "version": {
+                        "description": "Version is the installed version of the package",
+                        "type": "string"
+                    }
+                }
+            },
+            "VulnerabilityWorkload": {
+                "type": "object",
+                "properties": {
+                    "apiVersion": {
+                        "description": "APIVersion is the api version of the workload",
+                        "type": "string"
+                    },
+                    "category": {
+                        "description": "Category is the category of the workload namespace, i.e., customer, platform or system",
+                        "type": "string"
+                    },
+                    "kind": {
+                        "description": "Kind is the kind of the workload",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Name is the name of the workload",
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "description": "Namespace is the namespace of the workload",
                         "type": "string"
                     }
                 }
