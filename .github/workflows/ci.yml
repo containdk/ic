@@ -25,9 +25,7 @@ jobs:
       run-govulncheck: true
       govulncheck-fail: true
       govulncheck-fail-without-fix: true
-    secrets:
-      gh_username: "ic-robot"
-      gh_token: ${{ secrets.CONTAIN_BOT_PAT }}
+    secrets: inherit
 
   release:
     runs-on: ubuntu-latest
